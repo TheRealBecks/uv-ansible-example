@@ -1,0 +1,37 @@
+[project]
+name = "uv-ansible-example"
+description = "Your Project Description"
+readme = "README.md"
+version = "1.0.0"
+requires-python = ">=3.12.5,<3.13"
+dependencies = [
+  "ansible==10.4.*",
+  "ansible-core==2.17.*",
+  "ansible-pylibssh",
+  "hvac",
+  "jmespath",
+  "netaddr",
+  "paramiko",
+]
+
+[project.optional-dependencies]
+dev = [
+  "ansible-lint",
+  "icecream",
+  "ruff",
+]
+
+[tool.ruff]
+line-length = 120
+target-version = "py312"
+# Allow autofix for all enabled rules (when `--fix`) is provided.
+lint.fixable = ["ALL"]
+lint.select = ["ALL"]
+lint.ignore = ["COM812", "D203", "D212", "D415", "FIX002", "TD003"]
+
+[tool.ruff.lint.per-file-ignores]
+"__init__.py" = ["D104", "F401"]
+
+[tool.uv]
+# Disable Windows as some packages are not compiled for that system
+environments = ["platform_system != 'Windows'"]

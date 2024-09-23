@@ -1,0 +1,7 @@
+# Ignore everything
+*
+
+# Allow project specific files
+!/uv-ansible-example
+!/pyproject.toml
+!/uv.lock

@@ -1,0 +1,9 @@
+---
+collections:
+  # KVM virtualization
+  - name: community.libvirt
+    type: galaxy
+
+  # MySQL database
+  - name: community.mysql
+    type: galaxy
