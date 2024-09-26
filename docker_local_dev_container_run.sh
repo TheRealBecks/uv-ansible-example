@@ -20,8 +20,8 @@ then
     -w /uv-ansible-example/uv-ansible-example \
     --env-file .env \
     -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} \
-    -v uv-ansible-example:/uv-ansible-example/uv-ansible-example \
-    -v ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK} \
+    --mount type=bind,source=uv-ansible-example,destination=/uv-ansible-example/uv-ansible-example \
+    --mount type=bind,source=${SSH_AUTH_SOCK},destination=${SSH_AUTH_SOCK},readonly \
     uv-ansible-example \
     bash
     
@@ -33,9 +33,9 @@ else
     -w /uv-ansible-example/uv-ansible-example \
     --env-file .env \
     -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} \
-    -v uv-ansible-example:/uv-ansible-example/uv-ansible-example \
-    -v ${COMPANY_CERTIFICATE_FOLDER}:/usr/share/ca-certificates/company \
-    -v ${SSH_AUTH_SOCK}:${SSH_AUTH_SOCK} \
+    --mount type=bind,source=uv-ansible-example,destination=/uv-ansible-example/uv-ansible-example \
+    --mount type=bind,source=${COMPANY_CERTIFICATE_FOLDER},destination=/usr/share/ca-certificates/company,readonly \
+    --mount type=bind,source=${SSH_AUTH_SOCK},destination=${SSH_AUTH_SOCK},readonly \
     uv-ansible-example \
     bash
     
