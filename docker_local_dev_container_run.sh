@@ -17,26 +17,23 @@ then
     # ...without COMPANY_CERTIFICATE_FOLDER environment variable
     docker run \
     -it \
-    -w /uv-ansible-example/uv-ansible-example \
-    --env-file .env \
+    -w "/uv-ansible-example/uv-ansible-example" \
+    --env-file ".env" \
     -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} \
-    --mount type=bind,source=uv-ansible-example,destination=/uv-ansible-example/uv-ansible-example \
-    --mount type=bind,source=${SSH_AUTH_SOCK},destination=${SSH_AUTH_SOCK},readonly \
+    --mount type=bind,source="${SSH_AUTH_SOCK}",destination="${SSH_AUTH_SOCK}",readonly \
+    --mount type=bind,source="$(realpath uv-ansible-example)",destination="/uv-ansible-example/uv-ansible-example" \
     uv-ansible-example \
     bash
-    
-    
 else
     # ...with COMPANY_CERTIFICATE_FOLDER environment variable
     docker run \
     -it \
-    -w /uv-ansible-example/uv-ansible-example \
-    --env-file .env \
+    -w "/uv-ansible-example/uv-ansible-example" \
+    --env-file ".env" \
     -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} \
-    --mount type=bind,source=uv-ansible-example,destination=/uv-ansible-example/uv-ansible-example \
-    --mount type=bind,source=${COMPANY_CERTIFICATE_FOLDER},destination=/usr/share/ca-certificates/company,readonly \
-    --mount type=bind,source=${SSH_AUTH_SOCK},destination=${SSH_AUTH_SOCK},readonly \
+    --mount type=bind,source="${SSH_AUTH_SOCK}",destination="${SSH_AUTH_SOCK}",readonly \
+    --mount type=bind,source="$(realpath uv-ansible-example)",destination="/uv-ansible-example/uv-ansible-example" \
+    --mount type=bind,source="${COMPANY_CERTIFICATE_FOLDER}",destination="/usr/share/ca-certificates/company",readonly \
     uv-ansible-example \
     bash
-    
 fi

@@ -32,3 +32,6 @@ RUN apt-get install -y ssh
 
 # Install the Ansible requirements
 RUN ansible-galaxy install -r uv-ansible-example/requirements.yaml
+
+# Create certificate folder needed for local dev Docker containers
+RUN mkdir -p /usr/share/ca-certificates/company
