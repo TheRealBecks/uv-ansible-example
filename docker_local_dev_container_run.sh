@@ -5,7 +5,7 @@ SOURCE_DIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")")
 
 # Check if user has set '.env' file
 if [ ! -f "${SOURCE_DIR}/.env" ]; then
-    echo "Error: Specify your '.env' file in \"${SOURCE_DIR}\" first!"
+    echo "Error: Specify your \".env\" file in \"${SOURCE_DIR}\" first!"
     exit 1
 fi
 
