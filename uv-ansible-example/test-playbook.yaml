@@ -11,4 +11,6 @@
   # These numbers of failed hosts per batch run will fail and stop the entire run: 1 out of 2, 2 out of 5, 4 out of 10, etc.
   max_fail_percentage: 39
   tasks:
-    - ansible.builtin.shell: echo 'hello world'
+    - name: Hello World
+      ansible.builtin.debug:
+        msg: "Hello World!"
