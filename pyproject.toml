@@ -3,10 +3,10 @@ name = "uv-ansible-example"
 description = "Your Project Description"
 readme = "README.md"
 version = "1.0.0"
-requires-python = ">=3.12.5,<3.13"
+requires-python = ">=3.13,<3.14"
 dependencies = [
-  "ansible==10.4.*",
-  "ansible-core==2.17.*",
+  "ansible==11.5.*",
+  "ansible-core==2.18.*",
   "ansible-pylibssh",
   "hvac",
   "jmespath",
@@ -23,7 +23,7 @@ dev = [
 
 [tool.ruff]
 line-length = 120
-target-version = "py312"
+target-version = "py313"
 # Allow autofix for all enabled rules (when `--fix`) is provided.
 lint.fixable = ["ALL"]
 lint.select = ["ALL"]

@@ -1,5 +1,39 @@
 ---
 all:
-  hosts:
-    localhost:
-      ansible_connection: local
+  children:
+    server:
+      children:
+        server_prod:
+          hosts:
+            localhost:
+              ansible_connection: local
+            # prod-server1a.example.com
+            # prod-server1b.example.com
+            # prod-server2a.example.com
+            # prod-server2b.example.com
+        server_test:
+          hosts:
+            localhost:
+              ansible_connection: local
+            # test-server1a.example.com
+            # test-server1b.example.com
+            # test-server2a.example.com
+            # test-server2b.example.com
+    redundancy:
+      children:
+        redundancy_a:
+          hosts:
+            localhost:
+              ansible_connection: local
+            # prod-server1a.example.com
+            # prod-server2a.example.com
+            # test-server1a.example.com
+            # test-server2a.example.com
+        redundancy_b:
+          hosts:
+            localhost:
+              ansible_connection: local
+            # prod-server1b.example.com
+            # prod-server2b.example.com
+            # test-server1b.example.com
+            # test-server2b.example.com

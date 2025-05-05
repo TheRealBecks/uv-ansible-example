@@ -3,10 +3,10 @@
 This example project is intended to be a real world example that can be used for small private projects but also company production setups.
 
 Main features:
-* Python environment with [`uv`](https://github.com/astral-sh/uv)
-* Ansible
-* HashiCorp Vault integration
-* Python linting and formatting with [`ruff`](https://github.com/astral-sh/ruff)
+* Python environment with `uv` ([Github](https://github.com/astral-sh/uv), [Documentation](https://docs.astral.sh/uv/))
+* Ansible ([Github](https://github.com/ansible/ansible), [Documentation](https://docs.ansible.com/ansible/latest/))
+* OpenBao (or HashiCorp Vault) integration ([Github](https://github.com/openbao/openbao), [Documentation](https://openbao.org/docs/))
+* Python linting and formatting with `ruff` ([Github](https://github.com/astral-sh/ruff), [Documentation](https://docs.astral.sh/ruff/))
 * Docker development container with local `.env` file
 * Docker production container with environment variables
 
@@ -28,14 +28,21 @@ curl -LsSf https://astral.sh/uv/install.sh | sh
 uv self update
 ```
 
-Install the Python development environment:
+Create a `pyproject.toml` file and define optional packages for the development environment under `project.optional-dependencies` with the name `dev`. Afterwards install the Python development environment with the name `dev` defined in the `pyproject.toml`:
 ```
 uv sync --extra dev
 ```
 
-Check which versions have been installed and locked for all platforms(*):
+...or without the optional `dev` packages:
 ```
-uv pip freeze
+uv sync
+```
+
+A new `uv.lock` file has been created! 🎉
+
+Check which packages versions have been installed and locked for all platforms(*):
+```
+uv pip list
 ```
 
 (*): All platforms except Windows as that platform is not compatible with `ansible-lint` anymore and therefore has been disabled in the `pyproject.toml` file.

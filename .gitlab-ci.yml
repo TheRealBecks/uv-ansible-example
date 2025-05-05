@@ -1,0 +1,106 @@
+---
+stages:
+  - build
+  - testing__check__all
+  - testing__configure__redundancy_a
+  - testing__configure__redundancy_b
+  - production__check__all
+  - production__configure__redundancy_a
+  - production__configure__redundancy_b
+
+build_docker:
+  stage: build
+  image: docker:dind
+  before_script:
+    - docker login -u $DOCKER_REGISTRY_USER -p $DOCKER_REGISTRY_PASSWORD $DOCKER_REGISTRY_DOMAIN
+  after_script:
+    - docker logout $DOCKER_REGISTRY_DOMAIN
+  script:
+    - update-ca-certificates
+    - >-
+      docker build --pull --no-cache
+      --build-arg HTTP_PROXY="${HTTP_PROXY}"
+      --build-arg HTTPS_PROXY="${HTTPS_PROXY}"
+      --build-arg NO_PROXY="${NO_PROXY}"
+      --build-arg DOCKER_PYTHON_VERSION="${DOCKER_PYTHON_VERSION}"
+      -t ${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PROJECT_TEAM}/uv-ansible-example:latest .
+    - docker push ${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PROJECT_TEAM}/uv-ansible-example:latest
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "push"
+      changes:
+        - .dockerignore
+        - uv-ansible-example/**/*
+        - Dockerfile
+        - pyproject.toml
+        - uv.lock
+  tags:
+    - SNI
+
+.network_device_configuration:
+  stage: none
+  image:
+    name: ${DOCKER_REGISTRY_DOMAIN}/${DOCKER_REGISTRY_PROJECT_TEAM}/uv-ansible-example:latest
+    pull_policy: always
+  variables:
+    ANSIBLE_CONFIG: ansible.cfg
+    ANSIBLE_LIMIT: "server_test:&redundancy_a"
+    ANSIBLE_PLAYBOOK_NAME: network_device_configuration.yaml
+  id_tokens:
+    VAULT_ID_TOKEN:
+      aud: $VAULT_ADDR
+  script:
+    - update-ca-certificates
+    - cd uv-ansible-example
+    - echo $PASSWORD > $ANSIBLE_CONNECTION_PASSWORD_FILE
+    - >-
+      ansible-playbook playbooks/$ANSIBLE_PLAYBOOK_NAME
+      -l $ANSIBLE_LIMIT
+      $ANSIBLE_CHECK
+  rules:
+    - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH && $CI_PIPELINE_SOURCE == "web"
+  tags:
+    - SNI
+
+# testing__check
+testing__check__server_test:
+  extends: .network_device_configuration
+  stage: testing__check__all
+  variables:
+    ANSIBLE_CHECK: "--check"
+    ANSIBLE_LIMIT: "server_test"
+
+# testing__configure with redundancy_a
+testing__configure__server_test__redundancy_a:
+  extends: .network_device_configuration
+  stage: testing__configure__redundancy_a
+  variables:
+    ANSIBLE_LIMIT: "server_test:&redundancy_a"
+
+# testing__configure with redundancy_b
+testing__configure__server_test__redundancy_b:
+  extends: .network_device_configuration
+  stage: testing__configure__redundancy_b
+  variables:
+    ANSIBLE_LIMIT: "server_test:&redundancy_b"
+
+# production__check
+production__check__server_test:
+  extends: .network_device_configuration
+  stage: production__check__all
+  variables:
+    ANSIBLE_CHECK: "--check"
+    ANSIBLE_LIMIT: "server_test"
+
+# production__configure with redundancy_a
+production__configure__server_prod__redundancy_a:
+  extends: .network_device_configuration
+  stage: production__configure__redundancy_a
+  variables:
+    ANSIBLE_LIMIT: "server_prod:&redundancy_a"
+
+# production__configure with redundancy_b
+production__configure__server_prod__redundancy_b:
+  extends: .network_device_configuration
+  stage: production__configure__redundancy_b
+  variables:
+    ANSIBLE_LIMIT: "server_prod:&redundancy_b"
