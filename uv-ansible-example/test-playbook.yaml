@@ -1,4 +1,16 @@
 ---
-- hosts: all
+- name: Ansible example playbook
+  connection: "{{ ansible_connection | d('ssh') }}"
+  gather_facts: true
+  gather_subset: [all]
+  hosts: server
+  # Run playbook in batches with these numbers or percentages of devices one after another until all devices are configured:
+  serial: [2, 5, 10, 20, "10%"]
+  # https://docs.ansible.com/ansible/latest/playbook_guide/playbooks_error_handling.html#setting-a-maximum-failure-percentage
+  # Fail a batch run with MORE THAN 39 % (>39 %), so 40 % or more will lead to a failed batch run
+  # These numbers of failed hosts per batch run will fail and stop the entire run: 1 out of 2, 2 out of 5, 4 out of 10, etc.
+  max_fail_percentage: 39
   tasks:
-    - ansible.builtin.shell: echo 'hello world'
+    - name: Hello World
+      ansible.builtin.debug:
+        msg: "Hello World!"
