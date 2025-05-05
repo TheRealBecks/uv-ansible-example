@@ -21,6 +21,7 @@ if [ -z ${COMPANY_CERTIFICATE_FOLDER+COMPANY_CERTIFICATE_FOLDER} ]; then
         -it \
         -w "/uv-ansible-example/uv-ansible-example" \
         --env-file "${SOURCE_DIR}/.env" \
+        --security-opt label=disable \
         -e SSH_AUTH_SOCK="${SSH_AUTH_SOCK}" \
         --mount type=bind,source="${SSH_AUTH_SOCK}",destination="${SSH_AUTH_SOCK}",readonly \
         --mount type=bind,source="${SOURCE_DIR}/uv-ansible-example",destination="/uv-ansible-example/uv-ansible-example" \
@@ -32,6 +33,7 @@ else
         -it \
         -w "/uv-ansible-example/uv-ansible-example" \
         --env-file "${SOURCE_DIR}/.env" \
+        --security-opt label=disable \
         -e SSH_AUTH_SOCK="${SSH_AUTH_SOCK}" \
         --mount type=bind,source="${SSH_AUTH_SOCK}",destination="${SSH_AUTH_SOCK}",readonly \
         --mount type=bind,source="${SOURCE_DIR}/uv-ansible-example",destination="/uv-ansible-example/uv-ansible-example" \

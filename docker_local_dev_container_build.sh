@@ -4,4 +4,4 @@
 SOURCE_DIR=$(realpath "$(dirname -- "${BASH_SOURCE[0]}")")
 
 # Build the local Podman/Docker container
-docker build --build-arg-file=".env" --tag uv-ansible-example "$SOURCE_DIR"
+docker build --build-arg-file=".env" --security-opt label=disable --tag uv-ansible-example "$SOURCE_DIR"
